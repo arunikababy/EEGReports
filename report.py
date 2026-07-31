@@ -1,5 +1,9 @@
 import streamlit as st
 
+# =====================================================
+# PAGE CONFIG
+# =====================================================
+
 st.set_page_config(
     page_title="Cannabis EEG Dashboard",
     page_icon="🧠",
@@ -7,160 +11,237 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# ============================================================
-# LOAD CSS
-# ============================================================
+# =====================================================
+# CSS
+# =====================================================
 
-with open("assets/style.css") as f:
-    st.markdown(
-        f"<style>{f.read()}</style>",
-        unsafe_allow_html=True
-    )
+st.markdown("""
+<style>
 
-# ============================================================
-# NAVBAR
-# ============================================================
+/* Hide Streamlit default menu & footer */
 
-col1,col2,col3=st.columns([1,6,1])
+#MainMenu {visibility:hidden;}
+footer {visibility:hidden;}
+header {visibility:hidden;}
 
-with col1:
+/* Main */
 
-    st.image("assets/logo.png",width=70)
+.block-container{
+    max-width:1200px;
+    padding-top:2rem;
+}
 
-with col2:
+/* Navigation */
 
-    st.markdown(
-        "<h2 class='logo-text'>EEG ACGAN Dashboard</h2>",
-        unsafe_allow_html=True
-    )
+.navbar{
+    display:flex;
+    justify-content:center;
+    gap:40px;
+    margin-top:5px;
+    margin-bottom:55px;
+    font-weight:600;
+    font-size:16px;
+}
 
-with col3:
+.navbar span{
+    color:#222;
+    cursor:pointer;
+}
 
-    st.button("📄 Paper")
+.navbar span:hover{
+    color:#2E7D32;
+}
 
-st.divider()
+/* Hero */
 
-# ============================================================
-# MENU
-# ============================================================
+.hero-title{
+    text-align:center;
+    font-size:58px;
+    font-weight:800;
+    color:black;
+    line-height:1.2;
+}
 
-menu=[
-    "Overview",
-    "Dataset",
-    "Preprocessing",
-    "ACGAN",
-    "Models",
-    "Results",
-    "About"
-]
+.hero-green{
+    color:#2E7D32;
+}
 
-selected=st.segmented_control(
+.hero-subtitle{
+    text-align:center;
+    font-size:22px;
+    color:#555;
+    margin-top:18px;
+    margin-bottom:35px;
+}
 
-    "",
+/* Button */
 
-    menu,
+div.stButton > button{
+    background:#2E7D32;
+    color:white;
+    border-radius:14px;
+    border:none;
+    padding:12px 30px;
+    font-size:17px;
+    font-weight:600;
+}
 
-    default="Overview"
+div.stButton > button:hover{
+    background:#215d25;
+    color:white;
+}
 
-)
+/* Metric Card */
 
-st.write("")
+.metric-card{
 
-# ============================================================
+    background:white;
+
+    border-radius:20px;
+
+    padding:28px;
+
+    border:1px solid #E8F5E9;
+
+    box-shadow:0px 6px 18px rgba(0,0,0,.06);
+
+    text-align:center;
+
+    transition:.3s;
+}
+
+.metric-card:hover{
+
+    transform:translateY(-5px);
+
+    border:1px solid #2E7D32;
+}
+
+.metric-value{
+
+    font-size:36px;
+
+    font-weight:800;
+
+    color:#2E7D32;
+
+}
+
+.metric-title{
+
+    color:#666;
+
+    font-size:15px;
+
+    margin-top:8px;
+
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+# =====================================================
+# NAVIGATION
+# =====================================================
+
+st.markdown("""
+<div class="navbar">
+<span>Overview</span>
+<span>Dataset</span>
+<span>Preprocessing</span>
+<span>ACGAN</span>
+<span>Results</span>
+<span>Paper</span>
+</div>
+""", unsafe_allow_html=True)
+
+# =====================================================
 # HERO
-# ============================================================
+# =====================================================
 
-left,right=st.columns([1.2,1])
+st.markdown("""
+<div class="hero-title">
 
-with left:
+Cannabis Classification Using<br>
 
-    st.markdown("""
-    <div class="hero-title">
+<span class="hero-green">
 
-    Cannabis Classification Using
+Auxiliary Classifier GAN (ACGAN)
 
-    <span>
+</span>
 
-    Auxiliary Classifier GAN (ACGAN)
+</div>
+""", unsafe_allow_html=True)
 
-    </span>
+st.markdown("""
+<div class="hero-subtitle">
 
-    </div>
+Artificial Intelligence for Cannabis EEG Analysis
 
-    """,unsafe_allow_html=True)
+<br>
 
-    st.markdown("""
+Eye Closed &nbsp; • &nbsp; Flanker Task
 
-    <div class="hero-subtitle">
+</div>
+""", unsafe_allow_html=True)
 
-    Single Subject Cannabis EEG Analysis
+c1,c2,c3=st.columns([2,1,2])
 
-    <br>
+with c2:
 
-    <b>Eye Closed</b> vs <b>Flanker Task</b>
-
-    </div>
-
-    """,unsafe_allow_html=True)
-
-    st.write("")
-
-    c1,c2=st.columns([1,1])
-
-    with c1:
-
-        st.button(
-            "Explore Results",
-            use_container_width=True
-        )
-
-    with c2:
-
-        st.button(
-            "Learn More",
-            use_container_width=True
-        )
-
-with right:
-
-    st.image(
-        "assets/hero.png",
+    st.button(
+        "Explore Results",
         use_container_width=True
     )
 
 st.write("")
 st.write("")
 
-# ============================================================
+# =====================================================
 # METRIC CARDS
-# ============================================================
+# =====================================================
 
-a,b,c,d,e=st.columns(5)
+col1,col2,col3,col4,col5=st.columns(5)
 
-a.metric(
-    "EEG Files",
-    "40"
-)
+cards=[
 
-b.metric(
-    "Subjects",
-    "1"
-)
+("40","EEG Files"),
 
-c.metric(
-    "Classes",
-    "4"
-)
+("1","Subject"),
 
-d.metric(
-    "Models",
-    "3"
-)
+("4","Classes"),
 
-e.metric(
-    "Best Accuracy",
-    "98.25%"
-)
+("3","Models"),
+
+("98.25%","Accuracy")
+
+]
+
+cols=[col1,col2,col3,col4,col5]
+
+for col,(value,title) in zip(cols,cards):
+
+    with col:
+
+        st.markdown(f"""
+
+        <div class="metric-card">
+
+        <div class="metric-value">{value}</div>
+
+        <div class="metric-title">{title}</div>
+
+        </div>
+
+        """,unsafe_allow_html=True)
 
 st.write("")
 st.divider()
+
+# =====================================================
+# NEXT SECTION (Placeholder)
+# =====================================================
+
+st.subheader("Research Workflow")
+
+st.info("➡️ Tahap berikutnya akan berisi Workflow Pipeline, Dataset, dan Preprocessing.")
